@@ -29,6 +29,8 @@ jobs:
           cp ./previous_version.txt ~/.local/share/siro256/notice_mohist_version/
 
       - name: Execute
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: |
           cd ./target/release/
           chmod 755 notice_mohist_version
