@@ -1,0 +1,48 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"
+
+jobs:
+  notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+
+      - name: Restore cache data
+        continue-on-error: true
+        run: |
+          git checkout cache_data
+          cp ./previous_version.txt ~/.local/share/siro256/notice_mohist_version/
+
+      - name: Execute
+        run: |
+          cd ./target/release/
+          chmod 755 notice_mohist_version
+          ./notice_mohist_version
+          cd ../../
+
+      - name: Cache data
+        run: cp ~/.local/share/siro256/notice_mohist_version/previous_version.txt .
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: previous_version.txt
+          default_author: user_info
+          message: Update previous version
+          new_branch: cache_data
+          pathspec_error_handling: exitImmediately
+          push: true
