@@ -25,7 +25,7 @@ jobs:
       - name: Restore cache data
         continue-on-error: true
         run: |
-          git checkout cache_data
+          git checkout origin/cache_data
           cp ./previous_version.txt ~/.local/share/siro256/notice_mohist_version/
 
       - name: Execute
