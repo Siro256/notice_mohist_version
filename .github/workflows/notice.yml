@@ -27,6 +27,7 @@ jobs:
         run: |
           git fetch origin
           git checkout cache_data
+          mkdir -p ~/.local/share/siro256/notice_mohist_version/
           cp ./previous_version.txt ~/.local/share/siro256/notice_mohist_version/
 
       - name: Execute
